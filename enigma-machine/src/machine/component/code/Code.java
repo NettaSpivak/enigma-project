@@ -11,12 +11,18 @@ public interface Code {
     Reflector getReflector();
 
     public static class RotorPosition {
-        public Rotor rotor;
-        public char position;
-        //public  RotorPosition() {}
-        public RotorPosition(Rotor rotor, char position) {
+        private Rotor rotor;
+        private char rotorPosition;
+
+        public RotorPosition(Rotor rotor, char rotorPosition) {
             this.rotor = rotor;
-            this.position = position;
+            this.rotorPosition = rotorPosition;
+        }
+        public Rotor getRotor() {
+            return rotor;
+        }
+        public char getRotorPosition() {
+            return rotorPosition;
         }
     }
 }

@@ -14,13 +14,13 @@ public class KeyboardImpl implements Keyboard {
         }
     }
 
-    public char[] getAlphabet() {
-        return alphabet;
-    }
-
     @Override
     public int processChar(char input) {
-        return charToIndexMap.get(Character.toUpperCase(input));
+        Integer charInd = charToIndexMap.get(Character.toUpperCase(input));
+        if (charInd == null) {
+            throw new IllegalArgumentException("Input character " + input + " is not in alphabet");
+        }
+        return charInd;
     }
 
     @Override

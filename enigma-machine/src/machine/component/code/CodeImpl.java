@@ -6,39 +6,42 @@ import machine.component.rotor.Rotor;
 import java.util.List;
 
 public class CodeImpl implements Code {
-    List<Rotor> rotors;
-    List<RotorPosition> rotorPositions;
-    Reflector reflector;
+    private List<Rotor> rotors;
+    private List <RotorPosition> rotorPositions; // the chosen code positions for each rotor
+    private Reflector reflector;
+
+    public CodeImpl(List<Rotor> rotors, List<RotorPosition> rotorPositions, Reflector reflector) {
+        setRotors(rotors);
+        setRotorPositions(rotorPositions);
+        setReflector(reflector);
+    }
 
     public void setRotors(List<Rotor> rotors) {
         this.rotors = rotors;
     }
-    public void setRotorPositions(String positions) throws IllegalArgumentException {
-        int i;
-        for(i=0; i<positions.length(); i++) {
-            try {
-                rotorPositions.add(new RotorPosition(rotors.get(i), positions.charAt(i)));
-            }catch (IndexOutOfBoundsException e) {
-                throw new IllegalArgumentException("Too many rotor positions provided");
-            }
+    public void setRotorPositions(List <RotorPosition> rotorPositions) {
+        for (RotorPosition rp : rotorPositions) {
+            rp.getRotor().initializeRotorPosition(rp.getRotorPosition());
         }
-        if (i<rotors.size()) {
-            throw new IllegalArgumentException("Not enough rotor positions provided");
-        }
+        this.rotorPositions = rotorPositions;
+    }
+
+    public void setReflector(Reflector reflector) {
+        this.reflector = reflector;
     }
 
     @Override
     public List<Rotor> getRotors() {
-        return List.of();
+        return this.rotors;
     }
 
     @Override
     public List<RotorPosition> getRotorPosition() {
-        return List.of();
+        return this.rotorPositions;
     }
 
     @Override
     public Reflector getReflector() {
-        return null;
+        return this.reflector;
     }
 }

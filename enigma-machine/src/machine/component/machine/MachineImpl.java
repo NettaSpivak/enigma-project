@@ -1,6 +1,7 @@
 package machine.component.machine;
 
 import machine.component.code.Code;
+import machine.component.keyboard.KeyboardImpl;
 import machine.component.rotor.Direction;
 import machine.component.keyboard.Keyboard;
 import machine.component.rotor.Rotor;
@@ -8,11 +9,11 @@ import machine.component.rotor.Rotor;
 import java.util.List;
 
 public class MachineImpl implements Machine {
-    private Code code;
     private final Keyboard keyboard;
+    private Code code;
 
-    public MachineImpl(Keyboard keyboard) {
-        this.keyboard = keyboard;
+    public MachineImpl(String alphabet) {
+        this.keyboard = new KeyboardImpl(alphabet);
     }
 
     @Override

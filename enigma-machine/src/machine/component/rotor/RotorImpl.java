@@ -6,9 +6,9 @@ public class RotorImpl implements Rotor{
     private final char[] right;
     private final char[] left;
     private final int alphabetSize;
-    private int position;
+    private int currentPosition;
 
-    RotorImpl(int id, int notchPosition, int alphabetSize, char[] right, char[] left){
+    public RotorImpl(int id, int notchPosition, int alphabetSize, char[] right, char[] left){
         this.id = id;
         this.notchPosition = notchPosition;
         this.alphabetSize = alphabetSize;
@@ -16,14 +16,21 @@ public class RotorImpl implements Rotor{
         this.left = left;
     }
 
-    public void initializeRotorPosition(int position) {
-        this.position = position;
+    public void initializeRotorPosition(char positionByChar) throws IllegalArgumentException {
+        char target = Character.toUpperCase(positionByChar);
+        for (int i = 0; i < alphabetSize; i++) {
+            if (right[i] == target) {
+                this.currentPosition = i;
+                return;
+            }
+        }
+        throw  new IllegalArgumentException("Invalid position provided");
     }
 
     @Override
     public int process(int input, Direction direction) {
         // shift the input index by the rotor position
-        int shiftedInput = (input + position) % alphabetSize;
+        int shiftedInput = (input + currentPosition) % alphabetSize;
         char letter;
         char[] targetArray;
         if (direction == Direction.FORWARD) {
@@ -37,7 +44,7 @@ public class RotorImpl implements Rotor{
             // find the index of the letter in the target array
             if (targetArray[i] == letter) {
                 // reverse shift the output index by the rotor position
-                int output = (i - position + alphabetSize) % alphabetSize;
+                int output = (i - currentPosition + alphabetSize) % alphabetSize;
                 return output;
             }
         }
@@ -46,7 +53,7 @@ public class RotorImpl implements Rotor{
 
     @Override
     public boolean advance() {
-        position = (position + 1) % alphabetSize;
-        return position == notchPosition;
+        currentPosition = (currentPosition + 1) % alphabetSize;
+        return currentPosition == notchPosition;
     }
 }
