@@ -15,7 +15,7 @@ public class KeyboardImpl implements Keyboard {
     }
 
     @Override
-    public int processChar(char input) {
+    public int processChar(char input) throws IllegalArgumentException {
         Integer charInd = charToIndexMap.get(Character.toUpperCase(input));
         if (charInd == null) {
             throw new IllegalArgumentException("Input character " + input + " is not in alphabet");

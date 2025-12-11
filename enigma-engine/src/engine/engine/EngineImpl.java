@@ -2,6 +2,7 @@ package engine.engine;
 
 import engine.codeBuilder.CodeBuilder;
 import engine.codeBuilder.CodeBuilderImpl;
+import engine.history.MachineHistory;
 import engine.machineRepository.MachineRepository;
 import engine.utils.Utils;
 import generated.BTEEnigma;
@@ -19,6 +20,7 @@ import java.util.*;
 public class EngineImpl implements Engine {
     MachineRepository machineRepository;
     Machine machine;
+    MachineHistory machineHistory;
 
     @Override
     public void loadXml(String filePath) throws Exception {
@@ -33,15 +35,23 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public void showMachineData() {
-
+    public String showMachineData() {
+        StringBuilder machineData = new StringBuilder();
+        machineData.append("Machine specification:\n");
+        machineData.append(machineRepository.showMachineRepositoryData());
+        //machineData.append("So far : ").append(machineHistory.getNumberOfMessagesInHistory()).append(" massages was processed at loaded machine\n");
+        machineData.append(machine.showCodeData());
+        return machineData.toString();
     }
 
     @Override
-    public void codeManual(String rotors, String rotorsPositions, String reflector) throws IllegalArgumentException {
+    public void codeManual(String rotors_, String rotorsPositions_, String reflector) throws IllegalArgumentException {
         // turn rotors ids string into list of ids as integers
         try {
-            List<Integer>  rotorsList = Arrays.stream(rotors.split(","))
+            String rotors = new StringBuilder(rotors_).reverse().toString();
+            String rotorsPositions = new StringBuilder(rotorsPositions_).reverse().toString();
+
+            List<Integer> rotorsList = Arrays.stream(rotors.split(","))
                     .map(rotor -> Integer.parseInt(rotor.trim())).toList();
             CodeBuilder codeBuilder = new CodeBuilderImpl(machineRepository);
             machine.setCode(codeBuilder.buildCode(rotorsList, rotorsPositions, reflector));
@@ -72,20 +82,30 @@ public class EngineImpl implements Engine {
             String randomReflectorId = Utils.intToRoman(random.nextInt(numOfReflectors) + 1);
             // build code and set it to machine
             CodeBuilder codeBuilder = new CodeBuilderImpl(machineRepository);
-            machine.setCode(codeBuilder.buildCode(rotorsIds.subList(0, 3), randomRotorsPositions, randomReflectorId));
+            machine.setCode(codeBuilder.buildCode(rotorsIds.subList(0, Machine.numberOfRotorsInUse), randomRotorsPositions, randomReflectorId));
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Failed to generate automatic code: " + e.getMessage());
         }
     }
 
     @Override
-    public String processMessage(String message) {
-        StringBuilder result = new StringBuilder();
-        for (char c : message.toCharArray()) {
-            result.append(machine.process(c));
+    public String processMessage(String message) throws IllegalArgumentException {
+        try {
+            StringBuilder result = new StringBuilder();
+            for (char c : message.toCharArray()) {
+                result.append(machine.process(c));
+            }
+            return result.toString();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Failed to process message: " + e.getMessage());
         }
-        return result.toString();
     }
+
+    @Override
+    public void resetCode(){
+        machine.resetCode();
+    }
+
 
     @Override
     public void statistics() {

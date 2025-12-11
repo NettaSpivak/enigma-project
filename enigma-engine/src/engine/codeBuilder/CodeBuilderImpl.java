@@ -9,9 +9,9 @@ import machine.component.reflector.Reflector;
 import machine.component.rotor.Rotor;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 public class CodeBuilderImpl implements CodeBuilder {
     private MachineRepository machineRepository;
@@ -25,7 +25,7 @@ public class CodeBuilderImpl implements CodeBuilder {
        try {
            List<Rotor> rotorsList = getRotors(rotors);
            if (rotorsList.size() != Machine.numberOfRotorsInUse) {
-               throw new IllegalArgumentException("Exactly " + Machine.numberOfRotorsInUse + "rotors must be specified.");
+               throw new IllegalArgumentException("Exactly " + Machine.numberOfRotorsInUse + " rotors must be specified.");
            }
            List<Code.RotorPosition> rotorPositionsList = getRotorsPositions(rotorsPositions, rotorsList);
            Reflector reflectorObj = getReflector(reflector);
@@ -37,17 +37,19 @@ public class CodeBuilderImpl implements CodeBuilder {
 
     private List<Rotor> getRotors(List<Integer> rotors) throws  IllegalArgumentException {
         List<Rotor> rotorList = new ArrayList<>();
+        Set<Integer> rotorIdsSet = new HashSet<>();
         // get rotors from the rotors repository
         for (int rotorId : rotors) {
+            if (rotorIdsSet.contains(rotorId)) {
+                throw new IllegalArgumentException("Duplicate rotor ID found: " + rotorId);
+            }
             rotorList.add(machineRepository.getRotorById(rotorId));
+            rotorIdsSet.add(rotorId);
         }
-        Collections.reverse(rotorList); // reverse the list to match the rotor order
         return  rotorList;
     }
 
     private List<Code.RotorPosition> getRotorsPositions(String rotorsPositions, List<Rotor> rotorList) throws IllegalArgumentException {
-        // reverse the rotor list to match the positions order
-        Collections.reverse(rotorList);
         // get rotors positions
         List<Code.RotorPosition> rotorPositionList = new ArrayList<>();
         rotorsPositions = rotorsPositions.trim();
@@ -66,7 +68,6 @@ public class CodeBuilderImpl implements CodeBuilder {
         if (i < rotorList.size()) {
             throw new IllegalArgumentException("Fewer rotor positions provided than rotors.");
         }
-        Collections.reverse(rotorPositionList); // reverse the list to match the rotor order
         return rotorPositionList;
     }
 

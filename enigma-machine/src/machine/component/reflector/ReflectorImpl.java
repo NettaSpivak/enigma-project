@@ -10,6 +10,11 @@ public class ReflectorImpl implements Reflector {
     }
 
     @Override
+    public String getId(){
+        return this.id;
+    }
+
+    @Override
     public int process(int input) {
         return mapping[input];
     }

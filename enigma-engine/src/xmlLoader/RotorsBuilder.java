@@ -15,7 +15,7 @@ public class RotorsBuilder {
         try {
             Map<Integer, Rotor> Rotors = new HashMap<>();
             if (bteRotors.getBTERotor().size() < Machine.numberOfRotorsInUse) {
-                throw new IllegalArgumentException("RotorsCount must be at least " + Machine.numberOfRotorsInUse);
+                throw new IllegalArgumentException("Rotors Count must be at least " + Machine.numberOfRotorsInUse);
             }
             for (BTERotor bteRotor : bteRotors.getBTERotor()) {
                 // validate and create rotor

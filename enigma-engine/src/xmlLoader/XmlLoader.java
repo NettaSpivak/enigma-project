@@ -15,7 +15,7 @@ public class XmlLoader {
             BTEEnigma enigma = (BTEEnigma) jaxbUnmarshaller.unmarshal(new File(filePath));
             return enigma;
         } catch (JAXBException e) {
-            throw new RuntimeException("Failed to load Enigma configuration from XML" + filePath, e);
+            throw new RuntimeException("Failed to load Enigma configuration from XML: " + filePath, e);
         }
     }
 

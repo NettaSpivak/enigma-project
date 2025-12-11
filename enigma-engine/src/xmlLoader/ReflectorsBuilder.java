@@ -18,7 +18,7 @@ public class ReflectorsBuilder {
        try {
            Map<String, Reflector> reflectors = new HashMap<>();
            if (bteReflectors.getBTEReflector().isEmpty() || bteReflectors.getBTEReflector().size() > 5) {
-               throw new IllegalArgumentException("RotorsCount must be between 1-5.");
+               throw new IllegalArgumentException("Reflectors Count must be between 1-5.");
            }
            for (BTEReflector bteReflector : bteReflectors.getBTEReflector()) {
                String id = bteReflector.getId().trim();

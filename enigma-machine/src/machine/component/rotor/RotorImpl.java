@@ -16,6 +16,21 @@ public class RotorImpl implements Rotor{
         this.left = left;
     }
 
+    @Override
+    public int getId() {
+        return this.id;
+    }
+
+    @Override
+    public char getPosition(){
+        return right[currentPosition];
+    }
+
+    public int getPositionIndex(){
+        return this.currentPosition;
+    }
+
+    @Override
     public void initializeRotorPosition(char positionByChar) throws IllegalArgumentException {
         char target = Character.toUpperCase(positionByChar);
         for (int i = 0; i < alphabetSize; i++) {
@@ -55,5 +70,25 @@ public class RotorImpl implements Rotor{
     public boolean advance() {
         currentPosition = (currentPosition + 1) % alphabetSize;
         return currentPosition == notchPosition;
+    }
+
+    @Override
+    public int calculateNotchDistanceFromIndex(int ind) {
+        if (ind <= notchPosition) {
+            return notchPosition - ind;
+        } else {
+            return alphabetSize - (ind - notchPosition);
+        }
+    }
+
+    @Override
+    public int getCharIndex(char c) {
+        char target = Character.toUpperCase(c);
+        for (int i = 0; i < alphabetSize; i++) {
+            if (right[i] == target) {
+                return i;
+            }
+        }
+        throw new IllegalArgumentException("Character " + c + " not found in rotor alphabet");
     }
 }

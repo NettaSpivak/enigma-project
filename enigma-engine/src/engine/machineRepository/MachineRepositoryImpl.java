@@ -3,9 +3,7 @@ package engine.machineRepository;
 import machine.component.reflector.Reflector;
 import machine.component.rotor.Rotor;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class MachineRepositoryImpl implements MachineRepository {
     private final String alphabet;
@@ -53,5 +51,13 @@ public class MachineRepositoryImpl implements MachineRepository {
     @Override
     public  int getNumberOfDefinedReflectors() {
         return reflectorsRepository.size();
+    }
+
+    @Override
+    public StringBuilder showMachineRepositoryData() {
+        StringBuilder machineRepositoryData = new StringBuilder();
+        machineRepositoryData.append("Number of rotors in system: ").append(getNumberOfDefinedRotors()).append("\n");
+        machineRepositoryData.append("Number of reflectors in system: ").append(getNumberOfDefinedReflectors()).append("\n");
+        return machineRepositoryData;
     }
 }

@@ -17,12 +17,22 @@ public class MachineImpl implements Machine {
     }
 
     @Override
+    public Code getCode() {
+        return this.code;
+    }
+
+    @Override
     public void setCode(Code code) {
         this.code = code;
     }
 
     @Override
-    public char process(char input) {
+    public void resetCode(){
+        code.resetRotorsPositions();
+    }
+
+    @Override
+    public char process(char input) throws IllegalArgumentException{
         List<Rotor> rotors = code.getRotors();
         int intermediate = keyboard.processChar(input);
         // advance rotors
@@ -44,6 +54,19 @@ public class MachineImpl implements Machine {
             if (!rotor.advance()) {
                 break;
             }
+        }
+    }
+
+    @Override
+    public String showCodeData() {
+        if (code == null) {
+            return "No code is currently set on the machine.\n";
+        } else {
+            String machineData = "Original code configuration:\n" +
+                    code.showOriginalCodeData() +
+                    "Current code configuration:\n" +
+                    code.showCurrentCodeData();
+            return machineData;
         }
     }
 }
