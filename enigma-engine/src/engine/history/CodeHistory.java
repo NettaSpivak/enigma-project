@@ -24,7 +24,7 @@ public class CodeHistory {
     }
 
     public List<MessageHistory> getMessageHistory() {
-        return this.messageHistory;
+        return List.copyOf(this.messageHistory);
     }
 
     public int getNumberOfProcessedMessagesInCode() {

@@ -12,7 +12,7 @@ public class ShowHistoryAndStatistics {
     public static String showHistoryAndStatistics(MachineHistoryDto machineHistoryDto) {
         StringBuilder machineHistory = new StringBuilder();
         List<CodeHistoryDto> codeHistoryDtoList = machineHistoryDto.getCodeHistoryDto();
-        machineHistory.append("Machine History:\n");
+        machineHistory.append("=====Machine History =====\n");
         if (codeHistoryDtoList == null) {
             machineHistory.append("No code was set on the machine.\n");
         } else {

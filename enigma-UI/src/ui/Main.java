@@ -5,9 +5,9 @@ import enigmaManager.EnigmaManager;
 import ui.menu.actions.SetCodeManual;
 import ui.menu.actions.ShowHistoryAndStatistics;
 import ui.menu.actions.ShowMachineData;
-import ui.menu.menu.Menu;
-import ui.menu.menu.MenuImpl;
-import ui.menu.menu.MenuState;
+import ui.menu.screens.Menu;
+import ui.menu.screens.MenuImpl;
+import ui.menu.screens.MenuState;
 
 import java.util.Scanner;
 
@@ -24,6 +24,7 @@ public class Main {
         while (!exit){
             menu.displayMenu(menuState);
             String choice = scanner.nextLine().trim();
+            System.out.print("\n");
             try {
                 switch (menuState) {
                     case XML_NOT_LOADED -> {
@@ -34,14 +35,14 @@ public class Main {
                                 enigmaManager.loadXml(path);
 
                                 menuState = MenuState.XML_LOADED;
-                                System.out.println("XML loaded successfully.");
+                                System.out.println("XML loaded successfully.\n");
                                 break;
 
                             case "2":
                                 exit = true;
                                 break;
                             default:
-                                System.out.println("Invalid choice. Please try again.");
+                                System.out.println("Invalid choice. Please try again.\n");
                                 break;
                         }
                     }
@@ -53,7 +54,7 @@ public class Main {
                                 enigmaManager.loadXml(path);
 
                                 menuState = MenuState.XML_LOADED;
-                                System.out.println("XML loaded successfully.");
+                                System.out.println("XML loaded successfully.\n");
                                 break;
 
                             case "2":
@@ -68,13 +69,13 @@ public class Main {
                                 System.out.print("Enter reflector: ");
                                 String reflector = scanner.nextLine();
                                 enigmaManager.setCodeManual(SetCodeManual.setCodeMenual(rotors, rotorsPositions, reflector));
-                                System.out.println("Manual code set successfully.");
+                                System.out.println("Manual code set successfully.\n");
                                 menuState = MenuState.CODE_SET;
                                 break;
 
                             case "4":
                                 enigmaManager.setCodeAutomatic();
-                                System.out.println("Automatic code set successfully.");
+                                System.out.println("Automatic code set successfully.\n");
                                 menuState = MenuState.CODE_SET;
                                 break;
                             case "5":
@@ -86,7 +87,7 @@ public class Main {
                                 break;
 
                             default:
-                                System.out.println("Invalid choice. Please try again.");
+                                System.out.println("Invalid choice. Please try again.\n");
                                 break;
                         }
                     }
@@ -98,7 +99,7 @@ public class Main {
                                 enigmaManager.loadXml(path);
 
                                 menuState = MenuState.XML_LOADED;
-                                System.out.println("XML loaded successfully.");
+                                System.out.println("XML loaded successfully.\n");
                                 break;
 
                             case "2":
@@ -113,13 +114,13 @@ public class Main {
                                 System.out.print("Enter reflector: ");
                                 String reflector = scanner.nextLine();
                                 enigmaManager.setCodeManual(SetCodeManual.setCodeMenual(rotors, rotorsPositions, reflector));
-                                System.out.println("Manual code set successfully.");
+                                System.out.println("Manual code set successfully.\n");
                                 menuState = MenuState.CODE_SET;
                                 break;
 
                             case "4":
                                 enigmaManager.setCodeAutomatic();
-                                System.out.println("Automatic code set successfully.");
+                                System.out.println("Automatic code set successfully.\n");
                                 menuState = MenuState.CODE_SET;
                                 break;
 
@@ -127,12 +128,12 @@ public class Main {
                                 System.out.print("Enter message to process: ");
                                 String message = scanner.nextLine();
                                 MessageDto processedMessageDto = enigmaManager.processMessage(new MessageDto(message));
-                                System.out.println("Processed Message: " + processedMessageDto.getMessage());
+                                System.out.println("Processed Message: " + processedMessageDto.getMessage() + "\n");
                                 break;
 
                             case "6":
                                 enigmaManager.resetCode();
-                                System.out.println("Code reset successfully.");
+                                System.out.println("Code reset successfully.\n");
                                 break;
 
                             case "7":
@@ -143,14 +144,15 @@ public class Main {
                                 exit = true;
                                 break;
                             default:
-                                System.out.println("Invalid choice. Please try again.");
+                                System.out.println("Invalid choice. Please try again.\n");
                                 break;
                         }
                     }
                 }
             } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage() + "\n");
             }
         }
+        System.out.println("Goodbye!");
     }
 }

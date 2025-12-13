@@ -16,15 +16,15 @@ public class CodeSnapShot {
     }
 
     public List<Integer> getRotorIds() {
-        return rotorIds;
+        return List.copyOf(rotorIds);
     }
 
     public List<Character> getRotorPosition() {
-        return rotorPosition;
+        return List.copyOf(rotorPosition);
     }
 
     public List<Integer> getNotchDistanceFromWindow() {
-        return notchDistanceFromWindow;
+        return List.copyOf(notchDistanceFromWindow);
     }
 
     public String getReflectorId() {

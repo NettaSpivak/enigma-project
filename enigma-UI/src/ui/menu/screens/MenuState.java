@@ -1,4 +1,4 @@
-package ui.menu.menu;
+package ui.menu.screens;
 
 public enum MenuState {
     XML_NOT_LOADED,

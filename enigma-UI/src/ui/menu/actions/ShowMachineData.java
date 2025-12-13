@@ -10,7 +10,7 @@ public class ShowMachineData {
 
     public static String showMachineData(MachineDataDto machineDataDto) {
         StringBuilder machineData = new StringBuilder();
-        machineData.append("Machine specification:\n");
+        machineData.append("===== Machine specification =====\n");
         machineData.append("Number of rotors in system: ").append(machineDataDto.getRotorsInSystem()).append("\n");
         machineData.append("Number of reflectors in system: ").append(machineDataDto.getReflectorsInSystem()).append("\n");
         machineData.append("Total messages processed: ").append(machineDataDto.getProcessedMessageCount()).append("\n");

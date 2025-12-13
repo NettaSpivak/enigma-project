@@ -28,12 +28,12 @@ public class CodeImpl implements Code {
 
     @Override
     public List<Rotor> getRotors() {
-        return this.rotors;
+        return List.copyOf(this.rotors);
     }
 
     @Override
     public List<RotorPosition> getRotorsPositionsList() {
-        return this.rotorPositions;
+        return List.copyOf(this.rotorPositions);
     }
 
     @Override

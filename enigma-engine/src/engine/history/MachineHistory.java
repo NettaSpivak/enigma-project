@@ -49,7 +49,7 @@ public class MachineHistory {
     }
 
     public List<CodeHistory> getCodeHistory() {
-        return codeHistory;
+        return List.copyOf(codeHistory);
     }
 
 }

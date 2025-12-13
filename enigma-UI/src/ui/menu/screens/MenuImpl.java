@@ -1,4 +1,4 @@
-package ui.menu.menu;
+package ui.menu.screens;
 
 public class MenuImpl implements Menu {
 

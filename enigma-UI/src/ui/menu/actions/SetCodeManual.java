@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SetCodeManual {
-    public static CodeSnapShotDto setCodeMenual(String rotors_, String rotorsPositions_, String reflector){
+    public static CodeSnapShotDto setCodeMenual(String rotors_, String rotorsPositions_, String reflector) {
         // rotors string to ids list
         String rotors = rotors_.trim();
         String rotorsPositions = rotorsPositions_.trim();
