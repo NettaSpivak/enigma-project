@@ -1,21 +1,24 @@
 package machine.machine;
 
 import machine.component.code.Code;
+import machine.component.code.CodeImpl;
 import machine.component.code.CodeSnapShot;
 import machine.component.keyboard.KeyboardImpl;
 import machine.component.rotor.Direction;
 import machine.component.keyboard.Keyboard;
 import machine.component.rotor.Rotor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineImpl implements Machine {
+public class MachineImpl implements Machine, Serializable {
     private final Keyboard keyboard;
     private Code code;
 
     public MachineImpl(String alphabet) {
         this.keyboard = new KeyboardImpl(alphabet);
+        code = null;
     }
 
     @Override

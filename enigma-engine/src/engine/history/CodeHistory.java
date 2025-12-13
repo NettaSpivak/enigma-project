@@ -2,10 +2,11 @@ package engine.history;
 
 import machine.component.code.CodeSnapShot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CodeHistory {
+public class CodeHistory implements Serializable {
     private final CodeSnapShot codeSnapShot;
     private final List<MessageHistory> messageHistory;
 

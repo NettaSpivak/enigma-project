@@ -1,6 +1,8 @@
 package machine.component.reflector;
 
-public class ReflectorImpl implements Reflector {
+import java.io.Serializable;
+
+public class ReflectorImpl implements Reflector, Serializable {
     private final String id;
     private final int[] mapping;
 

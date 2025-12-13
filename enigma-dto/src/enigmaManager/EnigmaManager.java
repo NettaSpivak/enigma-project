@@ -37,4 +37,17 @@ public class EnigmaManager {
     public MachineHistoryDto historyAndStatistics() {
         return engine.historyAndStatistics();
     }
+
+    public void saveSnapshot(String path) throws RuntimeException {
+        engine.saveSnapshot(path);
+    }
+
+    public void loadSnapshot(String path) throws RuntimeException {
+        engine = engine.loadSnapshot(path);
+    }
+
+    public boolean haveCode() {
+        return engine.haveCode();
+    }
+
 }

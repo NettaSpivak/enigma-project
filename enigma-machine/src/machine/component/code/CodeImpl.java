@@ -3,11 +3,12 @@ package machine.component.code;
 import machine.component.reflector.Reflector;
 import machine.component.rotor.Rotor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CodeImpl implements Code {
+public class CodeImpl implements Code, Serializable {
     private final List<Rotor> rotors;
     private final List<RotorPosition> rotorPositions; // the chosen code positions for each rotor
     private final Reflector reflector;

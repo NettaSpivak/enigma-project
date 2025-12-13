@@ -1,9 +1,10 @@
 package machine.component.keyboard;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KeyboardImpl implements Keyboard {
+public class KeyboardImpl implements Keyboard, Serializable {
     private final char[] alphabet;
     private final Map<Character, Integer> charToIndexMap = new HashMap<>();
 

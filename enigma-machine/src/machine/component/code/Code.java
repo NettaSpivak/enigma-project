@@ -3,6 +3,7 @@ package machine.component.code;
 import machine.component.reflector.Reflector;
 import machine.component.rotor.Rotor;
 
+import java.io.Serializable;
 import java.util.List;
 
 public interface Code {
@@ -15,7 +16,7 @@ public interface Code {
 
 
 
-    public static class RotorPosition {
+    public static class RotorPosition implements Serializable {
         private final Rotor rotor;
         private final char rotorPosition;
         private final int rotorPositionIndex;

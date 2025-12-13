@@ -4,11 +4,12 @@ import machine.component.code.Code;
 import machine.component.rotor.Rotor;
 import machine.component.code.CodeSnapShot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MachineHistory {
+public class MachineHistory implements Serializable {
     private final List<CodeHistory> codeHistory;
 
     public MachineHistory() {

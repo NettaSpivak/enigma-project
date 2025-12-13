@@ -1,6 +1,8 @@
 package engine.history;
 
-public class MessageHistory {
+import java.io.Serializable;
+
+public class MessageHistory implements Serializable {
     private final String message;
     private final String processedMessage;
     private final long processTimeNano;

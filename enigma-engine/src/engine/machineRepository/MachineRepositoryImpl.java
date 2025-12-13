@@ -3,9 +3,10 @@ package engine.machineRepository;
 import machine.component.reflector.Reflector;
 import machine.component.rotor.Rotor;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class MachineRepositoryImpl implements MachineRepository {
+public class MachineRepositoryImpl implements MachineRepository, Serializable {
     private final String alphabet;
     private final Map<Integer, Rotor> rotorsRepository;
     private final Map<String, Reflector> reflectorsRepository;

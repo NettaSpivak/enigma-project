@@ -1,8 +1,9 @@
 package machine.component.code;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CodeSnapShot {
+public class CodeSnapShot implements Serializable {
     private final List<Integer> rotorIds;
     private final List<Character> rotorPosition;
     private final List<Integer> notchDistanceFromWindow;

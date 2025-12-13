@@ -16,9 +16,11 @@ import machine.machine.MachineImpl;
 import xmlLoader.MachineRepositoryBuilder;
 import xmlLoader.XmlLoader;
 
+import java.io.*;
 import java.util.*;
 
-public class EngineImpl implements Engine {
+public class EngineImpl implements Engine, Serializable {
+    private static final long serialVersionUID = 1L;
     private MachineRepository machineRepository;
     private Machine machine;
     private MachineHistory machineHistory;
@@ -146,4 +148,50 @@ public class EngineImpl implements Engine {
         return new MessageHistoryDto(messageHistory.getMessage(), messageHistory.getProcessedMessage(), messageHistory.getProcessTimeNano());
     }
 
+    @Override
+    public void saveSnapshot(String path) throws RuntimeException {
+        if (path == null || path.isBlank()) {
+            throw new IllegalArgumentException("Path cannot be empty");
+        }
+
+        String fullPath = path.endsWith(".bin") ? path : path + ".bin";
+
+        try (ObjectOutputStream out =
+                     new ObjectOutputStream(new FileOutputStream(fullPath))) {
+
+            out.writeObject(this);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save machine state" + e.getMessage());
+        }
+    }
+
+    @Override
+    public Engine loadSnapshot(String path) throws RuntimeException {
+        if (path == null || path.isBlank()) {
+            throw new IllegalArgumentException("Path cannot be empty");
+        }
+
+        String fullPath = path.endsWith(".bin") ? path : path + ".bin";
+
+        try (ObjectInputStream in =
+                     new ObjectInputStream(new FileInputStream(fullPath))) {
+
+            Object obj = in.readObject();
+
+            if (!(obj instanceof EngineImpl)) {
+                throw new IllegalArgumentException("Invalid snapshot file");
+            }
+
+            return (Engine ) obj;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException("Failed to load machine state", e);
+        }
+    }
+
+    public boolean haveCode() {
+        if (this.machine.getCode() == null) return false;
+        else return true;
+    }
 }

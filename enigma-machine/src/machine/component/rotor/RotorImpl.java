@@ -1,6 +1,8 @@
 package machine.component.rotor;
 
-public class RotorImpl implements Rotor{
+import java.io.Serializable;
+
+public class RotorImpl implements Rotor, Serializable {
     private final int id;
     private final int notchPosition;
     private final char[] right;

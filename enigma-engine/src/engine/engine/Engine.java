@@ -13,4 +13,7 @@ public interface Engine {
     MessageDto processMessage(MessageDto messagedto);
     void resetCode();
     MachineHistoryDto historyAndStatistics();
+    void saveSnapshot(String path);
+    Engine loadSnapshot(String path);
+    boolean haveCode();
 }
