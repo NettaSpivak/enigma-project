@@ -11,7 +11,7 @@ public class EnigmaManager {
     private Engine engine = new EngineImpl();
 
     public void loadXml(String filePath) throws Exception {
-        engine.loadXml(filePath);
+        engine.loadXml(filePath.trim());
     }
 
     public MachineDataDto getMachineData() {
@@ -39,11 +39,11 @@ public class EnigmaManager {
     }
 
     public void saveSnapshot(String path) throws RuntimeException {
-        engine.saveSnapshot(path);
+        engine.saveSnapshot(path.trim());
     }
 
     public void loadSnapshot(String path) throws RuntimeException {
-        engine = engine.loadSnapshot(path);
+        engine = engine.loadSnapshot(path.trim());
     }
 
     public boolean haveCode() {
