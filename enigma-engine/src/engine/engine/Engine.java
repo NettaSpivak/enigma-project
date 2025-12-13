@@ -1,11 +1,16 @@
 package engine.engine;
 
+import dto.CodeSnapShotDto;
+import dto.MachineDataDto;
+import dto.MachineHistoryDto;
+import dto.MessageDto;
+
 public interface Engine {
     void loadXml(String filePath) throws Exception;
-    String showMachineData(); // returns some machine dto
-    void codeManual(String rotors, String rotorsPositions, String reflector);
+    MachineDataDto showMachineData(); // returns some machine dto
+    void codeManual(CodeSnapShotDto codeSnapShotDto);
     void codeAutomatic();
-    String processMessage(String message);
+    MessageDto processMessage(MessageDto messagedto);
     void resetCode();
-    void statistics();
+    MachineHistoryDto historyAndStatistics();
 }

@@ -1,26 +1,27 @@
 package engine.engine;
 
+import dto.*;
 import engine.codeBuilder.CodeBuilder;
 import engine.codeBuilder.CodeBuilderImpl;
+import engine.history.CodeHistory;
 import engine.history.MachineHistory;
+import engine.history.MessageHistory;
 import engine.machineRepository.MachineRepository;
 import engine.utils.Utils;
 import generated.BTEEnigma;
 import machine.component.code.Code;
-import machine.component.code.CodeImpl;
-import machine.component.machine.Machine;
-import machine.component.machine.MachineImpl;
-import machine.component.reflector.Reflector;
-import machine.component.rotor.Rotor;
+import machine.component.code.CodeSnapShot;
+import machine.machine.Machine;
+import machine.machine.MachineImpl;
 import xmlLoader.MachineRepositoryBuilder;
 import xmlLoader.XmlLoader;
 
 import java.util.*;
 
 public class EngineImpl implements Engine {
-    MachineRepository machineRepository;
-    Machine machine;
-    MachineHistory machineHistory;
+    private MachineRepository machineRepository;
+    private Machine machine;
+    private MachineHistory machineHistory;
 
     @Override
     public void loadXml(String filePath) throws Exception {
@@ -29,32 +30,38 @@ public class EngineImpl implements Engine {
             MachineRepositoryBuilder machineRepositoryBuilder = new MachineRepositoryBuilder();
             this.machineRepository = machineRepositoryBuilder.buildMachineRepository(bteEnigma);
             this.machine = new MachineImpl(this.machineRepository.getAlphabet());
+            this.machineHistory = new MachineHistory();
         } catch (Exception e) {
             throw new Exception("Failed to load XML file: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public String showMachineData() {
-        StringBuilder machineData = new StringBuilder();
-        machineData.append("Machine specification:\n");
-        machineData.append(machineRepository.showMachineRepositoryData());
-        //machineData.append("So far : ").append(machineHistory.getNumberOfMessagesInHistory()).append(" massages was processed at loaded machine\n");
-        machineData.append(machine.showCodeData());
-        return machineData.toString();
+    public MachineDataDto showMachineData() {
+        int rotorsInSystem = machineRepository.getNumberOfDefinedRotors();
+        int reflectorsInSystem = machineRepository.getNumberOfDefinedReflectors();
+        int processedMessageCount = machineHistory.getTotalNumberOfProcessedMessages();
+        CodeSnapShot originalCodeSnapShot = machineHistory.getCurrentCodeSnapShot();
+        CodeSnapShot currentCodeSnapShot = machine.getCurrentCodeSnapShot();
+        return new MachineDataDto(rotorsInSystem, reflectorsInSystem, processedMessageCount, generateCodeSnapShotToDto(originalCodeSnapShot), generateCodeSnapShotToDto(currentCodeSnapShot));
+    }
+
+    private CodeSnapShotDto generateCodeSnapShotToDto(CodeSnapShot codeSnapShot) {
+        if (codeSnapShot == null)
+            return null;
+        List<Integer> rotorIds = codeSnapShot.getRotorIds().reversed();
+        List<Character> rotorsPositions = codeSnapShot.getRotorPosition().reversed();
+        List<Integer> notchDistanceFromWindow = codeSnapShot.getNotchDistanceFromWindow().reversed();
+        return new CodeSnapShotDto(rotorIds, rotorsPositions, notchDistanceFromWindow, codeSnapShot.getReflectorId());
     }
 
     @Override
-    public void codeManual(String rotors_, String rotorsPositions_, String reflector) throws IllegalArgumentException {
-        // turn rotors ids string into list of ids as integers
+    public void codeManual(CodeSnapShotDto codeSnapShotDto) throws IllegalArgumentException {
         try {
-            String rotors = new StringBuilder(rotors_).reverse().toString();
-            String rotorsPositions = new StringBuilder(rotorsPositions_).reverse().toString();
-
-            List<Integer> rotorsList = Arrays.stream(rotors.split(","))
-                    .map(rotor -> Integer.parseInt(rotor.trim())).toList();
             CodeBuilder codeBuilder = new CodeBuilderImpl(machineRepository);
-            machine.setCode(codeBuilder.buildCode(rotorsList, rotorsPositions, reflector));
+            Code newCode = codeBuilder.buildCode(codeSnapShotDto.getRotorIds(), codeSnapShotDto.getRotorPosition(), codeSnapShotDto.getReflectorId());
+            machine.setCode(newCode);
+            machineHistory.addNewCodeToHistory(newCode);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid rotor ID format. Rotor IDs must be integers separated by commas.");
         }
@@ -72,30 +79,42 @@ public class EngineImpl implements Engine {
             }
             Collections.shuffle(rotorsIds);
             // generate random rotors positions
-            String randomRotorsPositions = "";
+            List <Character> randomRotorsPositions = new ArrayList<>();
             String alphabet = machineRepository.getAlphabet();
             for (int i = 0; i < Machine.numberOfRotorsInUse; i++) {
-                randomRotorsPositions += alphabet.charAt(random.nextInt(alphabet.length()));
+                randomRotorsPositions.add(alphabet.charAt(random.nextInt(alphabet.length())));
             }
             // generate random reflector id
             int numOfReflectors = machineRepository.getNumberOfDefinedReflectors();
             String randomReflectorId = Utils.intToRoman(random.nextInt(numOfReflectors) + 1);
             // build code and set it to machine
             CodeBuilder codeBuilder = new CodeBuilderImpl(machineRepository);
-            machine.setCode(codeBuilder.buildCode(rotorsIds.subList(0, Machine.numberOfRotorsInUse), randomRotorsPositions, randomReflectorId));
+            Code newCode = codeBuilder.buildCode(rotorsIds.subList(0, Machine.numberOfRotorsInUse), randomRotorsPositions, randomReflectorId);
+            machine.setCode(newCode);
+            machineHistory.addNewCodeToHistory(newCode);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Failed to generate automatic code: " + e.getMessage());
         }
     }
 
     @Override
-    public String processMessage(String message) throws IllegalArgumentException {
+    public MessageDto processMessage(MessageDto messagedto) throws IllegalArgumentException {
         try {
+            String message = messagedto.getMessage().toUpperCase();
+            long startTime = System.nanoTime();
+            for (char c : message.toCharArray()) {
+                if(!Utils.isInAlphabet(c, machineRepository.getAlphabet())){
+                    throw new IllegalArgumentException("Input character " + c + " is not in alphabet");
+                }
+            }
             StringBuilder result = new StringBuilder();
             for (char c : message.toCharArray()) {
                 result.append(machine.process(c));
             }
-            return result.toString();
+            long endTime = System.nanoTime();
+            long durationNano = endTime - startTime;
+            this.machineHistory.addMessageToCode(message, result.toString(), durationNano);
+            return new MessageDto(result.toString());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Failed to process message: " + e.getMessage());
         }
@@ -108,7 +127,23 @@ public class EngineImpl implements Engine {
 
 
     @Override
-    public void statistics() {
-
+    public MachineHistoryDto historyAndStatistics() {
+        List<CodeHistoryDto> codeHistoryDto = new ArrayList<>();
+        for (CodeHistory codeHistory: machineHistory.getCodeHistory()) {
+            CodeSnapShotDto codeSnapShotDto = generateCodeSnapShotToDto(codeHistory.getCodeSnapShot());
+            List<MessageHistoryDto> messageHistoryDto = new ArrayList<>();
+            for (MessageHistory messageHistory: codeHistory.getMessageHistory()) {
+                messageHistoryDto.add(generateMessageHistoryToDto(messageHistory));
+            }
+            codeHistoryDto.add(new CodeHistoryDto(codeSnapShotDto, messageHistoryDto));
+        }
+        return new MachineHistoryDto(codeHistoryDto);
     }
+    private MessageHistoryDto generateMessageHistoryToDto(MessageHistory messageHistory) {
+        if (messageHistory == null) {
+            return null;
+        }
+        return new MessageHistoryDto(messageHistory.getMessage(), messageHistory.getProcessedMessage(), messageHistory.getProcessTimeNano());
+    }
+
 }

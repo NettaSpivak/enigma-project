@@ -9,5 +9,4 @@ public interface MachineRepository {
     Reflector getReflectorById(String id);
     int getNumberOfDefinedRotors();
     int getNumberOfDefinedReflectors();
-    StringBuilder showMachineRepositoryData();
 }

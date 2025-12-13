@@ -52,12 +52,4 @@ public class MachineRepositoryImpl implements MachineRepository {
     public  int getNumberOfDefinedReflectors() {
         return reflectorsRepository.size();
     }
-
-    @Override
-    public StringBuilder showMachineRepositoryData() {
-        StringBuilder machineRepositoryData = new StringBuilder();
-        machineRepositoryData.append("Number of rotors in system: ").append(getNumberOfDefinedRotors()).append("\n");
-        machineRepositoryData.append("Number of reflectors in system: ").append(getNumberOfDefinedReflectors()).append("\n");
-        return machineRepositoryData;
-    }
 }

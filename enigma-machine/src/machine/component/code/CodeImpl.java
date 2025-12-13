@@ -9,19 +9,19 @@ import java.util.List;
 
 public class CodeImpl implements Code {
     private final List<Rotor> rotors;
-    private final List <RotorPosition> rotorPositions; // the chosen code positions for each rotor
+    private final List<RotorPosition> rotorPositions; // the chosen code positions for each rotor
     private final Reflector reflector;
 
     public CodeImpl(List<Rotor> rotors, List<RotorPosition> rotorPositions, Reflector reflector) {
         this.rotors = rotors;
         this.rotorPositions = rotorPositions;
-        resetRotorsPositions();
+        resetRotorsCurrentPositions();
         this.reflector = reflector;
     }
 
     @Override
-    public void resetRotorsPositions() {
-        for (RotorPosition rp : rotorPositions) {
+    public void resetRotorsCurrentPositions() {
+        for (RotorPosition rp : this.rotorPositions) {
             rp.getRotor().initializeRotorPosition(rp.getRotorPosition());
         }
     }
@@ -32,7 +32,7 @@ public class CodeImpl implements Code {
     }
 
     @Override
-    public List<RotorPosition> getRotorPosition() {
+    public List<RotorPosition> getRotorsPositionsList() {
         return this.rotorPositions;
     }
 
@@ -42,37 +42,21 @@ public class CodeImpl implements Code {
     }
 
     @Override
-    public String showCurrentCodeData() {
-        List<RotorPosition> currentPositions = new ArrayList<>();
-        for (Rotor rotor : rotors) {
-            currentPositions.add(new RotorPosition(rotor, rotor.getPosition()));
+    public List<Integer> getRotorsIds() {
+        List<Integer> ids = new ArrayList<>();
+        for (Rotor rotor : this.rotors) {
+            ids.add(rotor.getId());
         }
-        return formatCode(this.rotors, currentPositions, this.reflector);
+        return ids;
     }
 
     @Override
-    public String showOriginalCodeData() {
-        return formatCode(this.rotors, this.rotorPositions, this.reflector);
+    public List<Character> getRotorsCurrentPositions() {
+        List<Character> positions = new ArrayList<>();
+        for (Rotor rotor : this.rotors) {
+            positions.add(rotor.getPosition());
+        }
+        return positions;
     }
 
-    private String formatCode (List <Rotor> rotors, List<RotorPosition> rotorPositions, Reflector reflector) {
-        StringBuilder codeData = new StringBuilder();
-        List<Rotor> reversedRotors = new ArrayList<>(rotors);
-        List<RotorPosition> reversedPositions = new ArrayList<>(rotorPositions);
-        Collections.reverse(reversedRotors);
-        Collections.reverse(reversedPositions);
-
-        codeData.append("<");
-        for (Rotor rotor : reversedRotors) {
-            codeData.append(rotor.getId());
-        }
-        codeData.append("><");
-        for (RotorPosition rp : reversedPositions) {
-            codeData.append(rp.getRotorPosition()).append("(").append(rp.getRotor().calculateNotchDistanceFromIndex(rp.getRotorPositionIndex())).append(")");
-        }
-        codeData.append("><");
-        codeData.append(reflector.getId()).append(">\n");
-        return codeData.toString();
-
-    }
 }

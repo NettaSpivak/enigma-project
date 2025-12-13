@@ -73,11 +73,11 @@ public class RotorImpl implements Rotor{
     }
 
     @Override
-    public int calculateNotchDistanceFromIndex(int ind) {
-        if (ind <= notchPosition) {
-            return notchPosition - ind;
+    public int calculateNotchDistanceFromWindow() {
+        if (currentPosition <= notchPosition) {
+            return notchPosition - currentPosition;
         } else {
-            return alphabetSize - (ind - notchPosition);
+            return alphabetSize - (currentPosition - notchPosition);
         }
     }
 

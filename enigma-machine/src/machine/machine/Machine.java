@@ -1,13 +1,13 @@
-package machine.component.machine;
+package machine.machine;
 
 import machine.component.code.Code;
+import machine.component.code.CodeSnapShot;
 
 public interface Machine {
-    static final int numberOfRotorsInUse = 3;
+    int numberOfRotorsInUse = 3;
     Code getCode();
     void setCode (Code code);
     void resetCode();
     char process(char input);
-    String showCodeData();
-
+    CodeSnapShot getCurrentCodeSnapShot();
 }

@@ -7,6 +7,6 @@ public interface Rotor {
     void initializeRotorPosition(char position) throws IllegalArgumentException;
     int process(int input, Direction direction);
     boolean advance();
-    int calculateNotchDistanceFromIndex(int ind);
+    int calculateNotchDistanceFromWindow();
     int getCharIndex(char c);
 }

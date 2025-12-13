@@ -1,11 +1,13 @@
-package machine.component.machine;
+package machine.machine;
 
 import machine.component.code.Code;
+import machine.component.code.CodeSnapShot;
 import machine.component.keyboard.KeyboardImpl;
 import machine.component.rotor.Direction;
 import machine.component.keyboard.Keyboard;
 import machine.component.rotor.Rotor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MachineImpl implements Machine {
@@ -28,11 +30,11 @@ public class MachineImpl implements Machine {
 
     @Override
     public void resetCode(){
-        code.resetRotorsPositions();
+        code.resetRotorsCurrentPositions();
     }
 
     @Override
-    public char process(char input) throws IllegalArgumentException{
+    public char process(char input) {
         List<Rotor> rotors = code.getRotors();
         int intermediate = keyboard.processChar(input);
         // advance rotors
@@ -58,15 +60,15 @@ public class MachineImpl implements Machine {
     }
 
     @Override
-    public String showCodeData() {
+    public CodeSnapShot getCurrentCodeSnapShot() {
         if (code == null) {
-            return "No code is currently set on the machine.\n";
+            return null;
         } else {
-            String machineData = "Original code configuration:\n" +
-                    code.showOriginalCodeData() +
-                    "Current code configuration:\n" +
-                    code.showCurrentCodeData();
-            return machineData;
+            List<Integer> notchDistanceFromWindow = new ArrayList<>();
+            for (Rotor rotor : code.getRotors()) {
+                notchDistanceFromWindow.add(rotor.calculateNotchDistanceFromWindow());
+            }
+            return new CodeSnapShot(code.getRotorsIds(), code.getRotorsCurrentPositions(), notchDistanceFromWindow, code.getReflector().getId());
         }
     }
 }

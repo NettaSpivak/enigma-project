@@ -7,11 +7,12 @@ import java.util.List;
 
 public interface Code {
     List<Rotor> getRotors();
-    List<RotorPosition> getRotorPosition();
+    List<RotorPosition> getRotorsPositionsList();
     Reflector getReflector();
-    void resetRotorsPositions();
-    String showCurrentCodeData();
-    String showOriginalCodeData();
+    public List<Integer> getRotorsIds();
+    public List<Character> getRotorsCurrentPositions();
+    void resetRotorsCurrentPositions();
+
 
 
     public static class RotorPosition {
@@ -24,6 +25,12 @@ public interface Code {
             this.rotorPosition = rotorPosition;
             this.rotorPositionIndex = rotor.getCharIndex(rotorPosition);
         }
+        public RotorPosition(Rotor rotor) {
+            this.rotor = rotor;
+            this.rotorPosition = rotor.getPosition();
+            this.rotorPositionIndex = rotor.getPositionIndex();
+        }
+
         public Rotor getRotor() {
             return rotor;
         }

@@ -5,5 +5,5 @@ import machine.component.code.Code;
 import java.util.List;
 
 public interface CodeBuilder {
-    Code buildCode(List<Integer> rotors, String rotorsPositions, String reflector);
+    Code buildCode(List<Integer> rotors, List<Character> rotorsPositions, String reflector);
 }

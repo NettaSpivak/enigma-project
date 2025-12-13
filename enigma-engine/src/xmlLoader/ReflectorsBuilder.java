@@ -4,7 +4,6 @@ import engine.utils.Utils;
 import generated.BTEReflect;
 import generated.BTEReflector;
 import generated.BTEReflectors;
-import generated.BTERotors;
 import machine.component.reflector.Reflector;
 import machine.component.reflector.ReflectorImpl;
 

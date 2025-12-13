@@ -1,16 +1,55 @@
 package engine.history;
 
+import machine.component.code.Code;
+import machine.component.rotor.Rotor;
+import machine.component.code.CodeSnapShot;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MachineHistory {
-    List<String> massages;
+    private final List<CodeHistory> codeHistory;
 
-
-    public List<String> GetMachineHistory(List<String> massages) {
-        return this.massages;
+    public MachineHistory() {
+        this.codeHistory = new ArrayList<>();
     }
 
-    public int getNumberOfMessagesInHistory() {
-        return massages.size();
+    public void addNewCodeToHistory(Code code) {
+        List<Integer> rotorIds = code.getRotorsIds();
+        List<Character> rotorInitialPositions = new ArrayList<>();
+        for (Code.RotorPosition rotorPosition : code.getRotorsPositionsList()) {
+            rotorInitialPositions.add(rotorPosition.getRotorPosition());
+        }
+        List<Integer> notchDistanceFromWindow = new ArrayList<>();
+        for (Rotor rotor : code.getRotors()) {
+            notchDistanceFromWindow.add(rotor.calculateNotchDistanceFromWindow());
+        }
+        CodeSnapShot newCodeSnapShot = new CodeSnapShot(rotorIds, rotorInitialPositions, notchDistanceFromWindow, code.getReflector().getId());
+        codeHistory.add(new CodeHistory(newCodeSnapShot));
     }
+
+    public void addMessageToCode(String message, String processedMessage, long processTimeNano) {
+        codeHistory.getLast().AddNewMessageToHistory(message, processedMessage, processTimeNano);
+    }
+
+    public CodeSnapShot getCurrentCodeSnapShot() {
+        if (codeHistory.isEmpty()) {
+            return null;
+        }
+        return this.codeHistory.get(codeHistory.size()-1).getCodeSnapShot();
+    }
+
+    public int getTotalNumberOfProcessedMessages() {
+        int processedMessages = 0;
+        for(CodeHistory codeHistory : this.codeHistory){
+            processedMessages += codeHistory.getNumberOfProcessedMessagesInCode();
+        }
+        return processedMessages;
+    }
+
+    public List<CodeHistory> getCodeHistory() {
+        return codeHistory;
+    }
+
 }

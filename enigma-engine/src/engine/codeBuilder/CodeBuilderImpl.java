@@ -4,14 +4,11 @@ import engine.machineRepository.MachineRepository;
 import engine.utils.Utils;
 import machine.component.code.Code;
 import machine.component.code.CodeImpl;
-import machine.component.machine.Machine;
+import machine.machine.Machine;
 import machine.component.reflector.Reflector;
 import machine.component.rotor.Rotor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CodeBuilderImpl implements CodeBuilder {
     private MachineRepository machineRepository;
@@ -21,7 +18,7 @@ public class CodeBuilderImpl implements CodeBuilder {
     }
 
     @Override
-    public Code buildCode(List<Integer> rotors, String rotorsPositions, String reflector) throws IllegalArgumentException{
+    public Code buildCode(List<Integer> rotors, List<Character> rotorsPositions, String reflector) throws IllegalArgumentException{
        try {
            List<Rotor> rotorsList = getRotors(rotors);
            if (rotorsList.size() != Machine.numberOfRotorsInUse) {
@@ -29,6 +26,8 @@ public class CodeBuilderImpl implements CodeBuilder {
            }
            List<Code.RotorPosition> rotorPositionsList = getRotorsPositions(rotorsPositions, rotorsList);
            Reflector reflectorObj = getReflector(reflector);
+           Collections.reverse(rotorsList);
+           Collections.reverse(rotorPositionsList);
            return new CodeImpl(rotorsList, rotorPositionsList, reflectorObj);
        } catch (IllegalArgumentException e) {
            throw new IllegalArgumentException("Error building code: " + e.getMessage());
@@ -46,27 +45,22 @@ public class CodeBuilderImpl implements CodeBuilder {
             rotorList.add(machineRepository.getRotorById(rotorId));
             rotorIdsSet.add(rotorId);
         }
-        return  rotorList;
+        return rotorList;
     }
 
-    private List<Code.RotorPosition> getRotorsPositions(String rotorsPositions, List<Rotor> rotorList) throws IllegalArgumentException {
+    private List<Code.RotorPosition> getRotorsPositions(List<Character> rotorsPositions, List<Rotor> rotorList) throws IllegalArgumentException {
         // get rotors positions
         List<Code.RotorPosition> rotorPositionList = new ArrayList<>();
-        rotorsPositions = rotorsPositions.trim();
-        int i;
-        for (i = 0; i < rotorsPositions.length(); i++) {
-            char position = rotorsPositions.charAt(i);
+        if (rotorsPositions.size() != rotorList.size()) {
+            throw new IllegalArgumentException("Rotor positions count doesn't mach rotors count.");
+        }
+        for (int i=0; i<rotorsPositions.size(); i++) {
+            Character position = rotorsPositions.get(i);
             // validate positions
             if (!Utils.isInAlphabet(position, machineRepository.getAlphabet())) {
                 throw new IllegalArgumentException("Invalid rotor position: " + position);
             }
-            if (i >= rotorList.size()) {
-                throw new IllegalArgumentException("More rotor positions provided than rotors.");
-            }
             rotorPositionList.add(new Code.RotorPosition(rotorList.get(i), position));
-        }
-        if (i < rotorList.size()) {
-            throw new IllegalArgumentException("Fewer rotor positions provided than rotors.");
         }
         return rotorPositionList;
     }

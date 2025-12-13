@@ -4,7 +4,7 @@ import engine.utils.Utils;
 import generated.BTEPositioning;
 import generated.BTERotor;
 import generated.BTERotors;
-import machine.component.machine.Machine;
+import machine.machine.Machine;
 import machine.component.rotor.Rotor;
 import machine.component.rotor.RotorImpl;
 
